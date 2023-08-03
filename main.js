@@ -1,6 +1,6 @@
 const BASE_APP_FILES = {
-  "base.py": {
-    url: "https://github.com/SocialFinanceDigitalLabs/sfnova/main/sfnova.py",
+  "sfnova.py": {
+    url: "https://raw.githubusercontent.com/SocialFinanceDigitalLabs/sfnova/main/sfnova.py",
   },
 };
 const BASE_REQUIREMENTS = ["streamlit_javascript"];
