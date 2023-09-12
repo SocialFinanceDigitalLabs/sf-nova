@@ -5,7 +5,7 @@ from pyodide.http import open_url
 import pandas as pd
 
 
-url = "https://raw.githubusercontent.com/SocialFinanceDigitalLabs/sfnova/main/examples/network/data.csv"
+url = "https://raw.githubusercontent.com/SocialFinanceDigitalLabs/sf-nova/main/examples/network/data.csv"
 
 st.title('network graph creator')
 

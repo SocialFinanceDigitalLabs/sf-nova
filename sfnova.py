@@ -7,7 +7,7 @@ from streamlit_javascript import st_javascript
 
 st.title("Share streamlit apps")
 
-BASE_URL = "https://sfdl.org.uk/sfnova/"
+BASE_URL = "https://sfdl.org.uk/sf-nova/"
 SAVED_APPS_KEY = "saved_apps4"
 
 
@@ -39,9 +39,9 @@ st.header("Search for your stlite apps")
 
 st.write(
     """
-- paste the url to a github folder that contains your files ( for example `https://github.com/socialFinanceDigitalLabs/sfnova/tree/main/example`). 
+- paste the url to a github folder that contains your files ( for example `https://github.com/socialFinanceDigitalLabs/sf-nova/tree/main/example`). 
 - It can include both `python` and `requirements.txt` files.
-- You can also paste an url that points to just the app's python file (for example `https://github.com/socialFinanceDigitalLabs/sfnova/tree/main/example/app.py`).
+- You can also paste an url that points to just the app's python file (for example `https://github.com/socialFinanceDigitalLabs/sf-nova/tree/main/example/app.py`).
 """
 )
 
@@ -62,7 +62,7 @@ class Page:
     def build(self):
         self.search_url = st.text_input(
             "github url:",
-            placeholder="https://github.com/socialFinanceDigitalLabs/sfnova/tree/main/example",
+            placeholder="https://github.com/socialFinanceDigitalLabs/sf-nova/tree/main/example",
         )
         if self.search_url:
             self.get_files()
