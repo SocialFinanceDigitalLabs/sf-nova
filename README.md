@@ -76,6 +76,7 @@ option - that will ensure your preview reloads every time you change something i
 ensure that those libraries are listed in a `requirements.txt` file in the same directory as your python file is. 
 Check [this example for guidance](/examples/network/requirements.txt). 
 
+## Share the app
 5. Once you are happy with your changes, you can commit them to your repository. "commit" just means you are saving your changes. Check [this page](https://docs.github.com/en/codespaces/the-githubdev-web-based-editor#commit-your-changes) for guidance.
 
 6. Finally, you can now share your app. Go to https://sfdl.org.uk/sf-nova and paste the link to your app's code (for example, `https://github.com/SocialFinanceDigitalLabs/sf-nova/tree/main/examples/hello_app`). Follow the instructions on the screen and you should be able to have your app up and running! In this example, the final app page would be this one: https://sfdl.org.uk/sf-nova/?url=https://raw.githubusercontent.com/SocialFinanceDigitalLabs/sf-nova/main/examples/hello_app/app.py.
