@@ -24,14 +24,13 @@ def run():
         page_icon="👋",
     )
 
-    st.write("# Welcome to Streamlit! 👋")
+    st.write("# Welcome to SF-nova! 👋")
 
     st.markdown(
         """
-        Streamlit is an open-source app framework built specifically for
+        SF-nova uses Streamlit to build apps that run entirely in the browser. Streamlit is an open-source app framework built specifically for
         Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
+        
         ### Want to learn more?
         - Check out [streamlit.io](https://streamlit.io)
         - Jump into our [documentation](https://docs.streamlit.io)
