@@ -8,7 +8,7 @@ from streamlit_javascript import st_javascript
 st.title("Share streamlit apps")
 
 BASE_URL = "https://sfdl.org.uk/sf-nova/"
-SAVED_APPS_KEY = "saved_apps4"
+SAVED_APPS_KEY = "saved_apps"
 
 
 def get_from_local_storage(k):
@@ -57,7 +57,12 @@ class Page:
         self.entrypoint_filename = None
 
         self.app_url = None
-        saved_apps = {}
+
+    @property
+    def entrypoint_file(self):
+        if self.entrypoint_filename and self.files:
+            return self.files[self.entrypoint_filename]
+        return None
 
     def build(self):
         self.search_url = st.text_input(
@@ -85,29 +90,50 @@ class Page:
         files = {}
         requirements_file = None
         if isinstance(content, dict):
-            if content.get("type", None) == "file" and content.get(
-                "name", None
-            ).endswith(".py"):
-                files[content["name"]] = content
+            content_type = content.get("type", None)
+            content_name = content.get("name", None)
+            if content_type == "file" and content_name.endswith(".py"):
+                files[content_name] = content
             else:
                 return
         else:
             for item in content:
-                if item.get("type", None) == "file" and item.get("name", "").endswith(
-                    ".py"
-                ):
-                    files[item["name"]] = item
-                if item["type"] == "file" and item["name"] == "requirements.txt":
+                item_type = item.get("type", None)
+                item_name = item.get("name", None)
+                if item_type == "file" and item_name.endswith(".py"):
+                    files[item_name] = item
+                elif item_type == "file" and item_name == "requirements.txt":
                     requirements_file = item
+                elif item_type == "dir" and item_name == "pages":
+                    pages = self.get_pages(item, api_url)
+                    files.update(pages)
 
         self.files = files
         self.requirements_file = requirements_file
 
-    @property
-    def entrypoint_file(self):
-        if self.entrypoint_filename and self.files:
-            return self.files[self.entrypoint_filename]
-        return None
+    def get_pages(self, item: dict, base_url):
+        pages_name = item["name"]
+        pages_url = f"{base_url}/{pages_name}"
+        data = open_url(pages_url)
+        content = json.loads(data.read())
+        pages = {}
+
+        if isinstance(content, dict):
+            content_type = content.get("type", None)
+            content_name = content.get("name", None)
+            if content_type == "file" and content_name.endswith(".py"):
+                content["is_page"] = True
+                pages[f"{pages_name}/{content_name}"] = content
+            else:
+                return
+        else:
+            for item in content:
+                item_type = item.get("type", None)
+                item_name = item.get("name", None)
+                if item_type == "file" and item_name.endswith(".py"):
+                    item["is_page"] = True
+                    pages[f"{pages_name}/{item_name}"] = item
+        return pages
 
     def build_form(self):
         st.header("1 - Entrypoint")
@@ -147,14 +173,26 @@ class Page:
         self.build_app_url()
         self.save_app()
 
-        st.markdown(f"[launch app]({self.app_url}) ↗️", unsafe_allow_html=True)
+        st.header("3 - Launch your app")
+        st.write("Here's your app url. Click on it or copy it to share it.")
+        st.write(self.app_url)
 
     def build_app_url(self):
-        url = f'?url={self.entrypoint_file["download_url"]}'
+        url = f'?file={self.entrypoint_file["download_url"]}'
 
         if self.other_files:
-            files_urls = [f["download_url"] for f in self.other_files]
-            url = f"{url}&url={'&url='.join(files_urls)}"
+            pages_urls = [
+                f["download_url"] for f in self.other_files if f.get("is_page", False)
+            ]
+            files_urls = [
+                f["download_url"]
+                for f in self.other_files
+                if not f.get("is_page", False)
+            ]
+            if files_urls:
+                url = f"{url}&file={'&file='.join(files_urls)}"
+            if pages_urls:
+                url = f"{url}&page={'&page='.join(pages_urls)}"
 
         if self.include_requirements and self.requirements_file:
             data = open_url(self.requirements_file["download_url"])

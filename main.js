@@ -3,24 +3,30 @@ const BASE_APP_FILES = {
     url: "https://raw.githubusercontent.com/SocialFinanceDigitalLabs/sf-nova/main/sf-nova.py",
   },
 };
+
+function urlsToObject(urls, prefix = "") {
+  return urls.reduce((acc, url) => {
+    const fileName = url.split("/").pop();
+    acc[`${prefix}${fileName}`] = { url };
+    return acc;
+  }, {});
+}
+
 const BASE_REQUIREMENTS = ["streamlit_javascript"];
 const loadAppFromUrl = () => {
-  console.log("loading app from url");
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const files = urlParams.getAll("url").reduce(
-    (a, url) => ({
-      ...a,
-      [new URL(url).pathname.split("/").pop()]: { url },
-    }),
-    {}
-  );
+
+  const files = urlsToObject(urlParams.getAll("file"));
+  const pages = urlsToObject(urlParams.getAll("page"), (prefix = "pages/"));
+
   const requirements = urlParams.getAll("req");
   if (Object.keys(files).length === 0) {
     mountStlite(BASE_APP_FILES, BASE_REQUIREMENTS);
     return;
   }
-  mountStlite(files, requirements);
+
+  mountStlite({ ...files, ...pages }, requirements);
 };
 
 const mountStlite = (files, requirements) => {
